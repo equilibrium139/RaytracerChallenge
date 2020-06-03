@@ -4,7 +4,7 @@
 
 const float EPSILON = 0.0001f;
 
-inline bool Equals(float a, float b, float e = EPSILON)
+inline bool Equals(float a, float b)
 {
-	return std::abs(a - b) < e;
+	return std::abs(a - b) < EPSILON;
 }

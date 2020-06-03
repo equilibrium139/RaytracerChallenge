@@ -97,3 +97,9 @@ inline Vector Cross(const Vector& lhs, const Vector& rhs)
 			lhs.z * rhs.x - lhs.x * rhs.z,
 			lhs.x * rhs.y - lhs.y * rhs.x };
 }
+
+inline Vector Normalize(Vector v)
+{
+	v.Normalize();
+	return v;
+}
