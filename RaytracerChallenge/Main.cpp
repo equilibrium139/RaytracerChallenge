@@ -17,6 +17,7 @@ struct Environment
 };
 
 #include "Canvas.h"
+#include "Matrix.h"
 
 void tick(const Environment& environment, Projectile& projectile)
 {
@@ -26,7 +27,7 @@ void tick(const Environment& environment, Projectile& projectile)
 
 int main()
 {
-	Projectile p{ Point(0, 1, 0), Vector(5, 5, 0) };
+	/*Projectile p{ Point(0, 1, 0), Vector(5, 5, 0) };
 	Environment e{ Vector(0, -0.1, 0), Vector(-0.01, 0, 0) };
 	Canvas c(900, 550);
 	while (p.position.y > 0.0f)
@@ -37,5 +38,37 @@ int main()
 	}
 	auto fileContents = CanvasToPPM(c);
 	std::ofstream ofs("test.ppm");
-	ofs << fileContents;
+	ofs << fileContents;*/
+	Mat4 m; 
+	m(0, 0) = 8.0f;
+	m(0, 1) = -5.0f;
+	m(0, 2) = 9.0f;
+	m(0, 3) = 2.0f;
+
+	m(1, 0) = 7.0f;
+	m(1, 1) = 5.0f;
+	m(1, 2) = 6.0f;
+	m(1, 3) = 1.0f;
+
+	m(2, 0) = -6.0f;
+	m(2, 1) = 0.0f;
+	m(2, 2) = 9.0f;
+	m(2, 3) = 6.0f;
+
+	m(3, 0) = -3.0f;
+	m(3, 1) = 0.0f;
+	m(3, 2) = -9.0f;
+	m(3, 3) = -4.0f;
+
+	auto inverse = m.Inverse();
+	for (std::size_t i = 0; i < 4; ++i)
+	{
+		for (std::size_t j = 0; j < 4; ++j)
+		{
+			std::cout << inverse.second(i, j) << '\t';
+		}
+		std::cout << '\n';
+	}
+
+	std::cout << m.Determinant() << '\n';
 }
