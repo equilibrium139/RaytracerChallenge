@@ -39,36 +39,24 @@ int main()
 	auto fileContents = CanvasToPPM(c);
 	std::ofstream ofs("test.ppm");
 	ofs << fileContents;*/
-	Mat4 m; 
-	m(0, 0) = 8.0f;
-	m(0, 1) = -5.0f;
-	m(0, 2) = 9.0f;
-	m(0, 3) = 2.0f;
 
-	m(1, 0) = 7.0f;
-	m(1, 1) = 5.0f;
-	m(1, 2) = 6.0f;
-	m(1, 3) = 1.0f;
-
-	m(2, 0) = -6.0f;
-	m(2, 1) = 0.0f;
-	m(2, 2) = 9.0f;
-	m(2, 3) = 6.0f;
-
-	m(3, 0) = -3.0f;
-	m(3, 1) = 0.0f;
-	m(3, 2) = -9.0f;
-	m(3, 3) = -4.0f;
+	Mat4 m
+	{
+		-5, 2, 6, -8,
+		1, -5, 1, 8,
+		7, 7, -6, -7,
+		1, -3, 7, 4
+	};
 
 	auto inverse = m.Inverse();
-	for (std::size_t i = 0; i < 4; ++i)
+	Mat4 expected
 	{
-		for (std::size_t j = 0; j < 4; ++j)
-		{
-			std::cout << inverse.second(i, j) << '\t';
-		}
-		std::cout << '\n';
-	}
+		0.21805f, 0.45113f, 0.24060f, -0.04511f,
+		-0.80827f, -1.45677f, -0.44361f, 0.52068f,
+		0.07895f, -0.22368f, -0.05263f, 0.19737f,
+		-0.52256f, -0.81391f, -0.30075f, 0.30639f
+	};
 
-	std::cout << m.Determinant() << '\n';
+	std::cout << inverse.second << '\n';
+	std::cout << expected << '\n';
 }

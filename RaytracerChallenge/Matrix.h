@@ -3,6 +3,9 @@
 #include <algorithm>
 #include <cstddef>
 #include <vector>
+#include <ostream>
+#include <cassert>
+#include <iomanip>
 
 #include "Math.h"
 #include "Vector.h"
@@ -15,6 +18,11 @@ class Matrix
 public:
 	Matrix()
 		:mat(N* N, 0.0f) {}
+	Matrix(std::initializer_list<float> list)
+	{
+		assert(list.size() == N * N);
+		mat = list;
+	}
 	float& operator()(int row, int column)
 	{
 		return mat[row * N + column];
@@ -93,6 +101,34 @@ public:
 			});
 		return { true, tranposed };
 	}
+	std::size_t dim()
+	{
+		return N;
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const Matrix& mat)
+	{
+		for (std::size_t i = 0; i < N; ++i)
+		{
+			for (std::size_t j = 0; j < N; ++j)
+			{
+				os << std::setw(10) << mat(i, j) << '\t';
+			}
+			os << '\n';
+		}
+		return os;
+	}
+
+	static Matrix Identity() 
+	{
+		//TODO potential optimization
+		Matrix m;
+		for (std::size_t i = 0; i < N; ++i)
+		{
+			m(i, i) = 1.0f;
+		}
+		return m;
+	}
 private:
 	std::vector<float> mat;
 
@@ -109,7 +145,6 @@ template<> float Matrix<2>::Determinant() const
 {
 	return mat[0] * mat[3] - mat[1] * mat[2];
 }
-
 
 static float Dot(const Mat4& lhs, int row, const Mat4& rhs, int column)
 {
@@ -143,7 +178,7 @@ inline Mat4 operator*(const Mat4& lhs, const Mat4& rhs)
 	{
 		for (std::size_t j = 0; j < 4; j++)
 		{
-			product(j, i) = Dot(rhs, j, lhs, i);
+			product(i, j) = Dot(lhs, i, rhs, j);
 		}
 	}
 	return product;
