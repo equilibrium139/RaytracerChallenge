@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <vector>
+#include <optional>
 #include <ostream>
 #include <cassert>
 #include <iomanip>
@@ -94,12 +95,12 @@ public:
 		}
 		return determinant;
 	}
-	std::pair<bool, Matrix> Inverse()
+	std::optional<Matrix> Inverse() const
 	{
 		float determinant = Determinant();
 		if (Equals(determinant, 0.0f))
 		{
-			return { false, {} };
+			return {};
 		}
 		Matrix cofactors;
 		for (std::size_t i = 0; i < N; ++i)
@@ -109,13 +110,13 @@ public:
 				cofactors(i, j) = Cofactor(i, j);
 			}
 		}
-		Matrix tranposed = cofactors.GetTransposed();
-		std::for_each(tranposed.mat.begin(), tranposed.mat.end(),
+		Matrix transposed = cofactors.GetTransposed();
+		std::for_each(transposed.mat.begin(), transposed.mat.end(),
 			[determinant](float& entry)
 			{
 				entry /= determinant;
 			});
-		return { true, tranposed };
+		return transposed;
 	}
 	std::size_t dim()
 	{

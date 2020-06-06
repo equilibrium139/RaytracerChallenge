@@ -478,7 +478,7 @@ namespace RaytracerTests
 		TEST_METHOD(TranslationInvertedMat4Point)
 		{
 			Point v(-3.0f, 4.0f, 5.0f);
-			Point translated = Translation(5.0f, -3.0f, 2.0f).Inverse().second * v;
+			Point translated = Translation(5.0f, -3.0f, 2.0f).Inverse().value() * v;
 			Assert::AreEqual(Point(-8.0f, 7.0f, 3.0f), translated);
 		}
 
@@ -506,14 +506,14 @@ namespace RaytracerTests
 		TEST_METHOD(ScalingInvertedMat4Point)
 		{
 			Point p(-4.0f, 6.0f, 8.0f);
-			Point scaled = Scaling(2.0f, 3.0f, 4.0f).Inverse().second * p;
+			Point scaled = Scaling(2.0f, 3.0f, 4.0f).Inverse().value() * p;
 			Assert::AreEqual(Point(-2.0f, 2.0f, 2.0), scaled);
 		}
 
 		TEST_METHOD(ScalingInvertedMat4Vector)
 		{
 			Vector p(-4.0f, 6.0f, 8.0f);
-			Vector scaled = Scaling(2.0f, 3.0f, 4.0f).Inverse().second * p;
+			Vector scaled = Scaling(2.0f, 3.0f, 4.0f).Inverse().value() * p;
 			Assert::AreEqual(Vector(-2.0f, 2.0f, 2.0), scaled);
 		}
 
@@ -541,8 +541,8 @@ namespace RaytracerTests
 		{
 			using std::sqrt;
 			Point p(0.0f, 1.0f, 0.0f);
-			Point rotatedHalf = RotationX(Radians(45.0f)).Inverse().second * p;
-			Point rotatedFull = RotationX(Radians(90.0f)).Inverse().second * p;
+			Point rotatedHalf = RotationX(Radians(45.0f)).Inverse().value() * p;
+			Point rotatedFull = RotationX(Radians(90.0f)).Inverse().value() * p;
 			Assert::AreEqual(Point(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f), rotatedHalf);
 			Assert::AreEqual(Point(0.0f, 0.0f, -1.0f), rotatedFull);
 		}
@@ -551,8 +551,8 @@ namespace RaytracerTests
 		{
 			using std::sqrt;
 			Vector p(0.0f, 1.0f, 0.0f);
-			Vector rotatedHalf = RotationX(Radians(45.0f)).Inverse().second * p;
-			Vector rotatedFull = RotationX(Radians(90.0f)).Inverse().second * p;
+			Vector rotatedHalf = RotationX(Radians(45.0f)).Inverse().value() * p;
+			Vector rotatedFull = RotationX(Radians(90.0f)).Inverse().value() * p;
 			Assert::AreEqual(Vector(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f), rotatedHalf);
 			Assert::AreEqual(Vector(0.0f, 0.0f, -1.0f), rotatedFull);
 		}
@@ -581,8 +581,8 @@ namespace RaytracerTests
 		{
 			using std::sqrt;
 			Point p(0.0f, 0.0f, 1.0f);
-			Point rotatedHalf = RotationY(Radians(45.0f)).Inverse().second * p;
-			Point rotatedFull = RotationY(Radians(90.0f)).Inverse().second * p;
+			Point rotatedHalf = RotationY(Radians(45.0f)).Inverse().value() * p;
+			Point rotatedFull = RotationY(Radians(90.0f)).Inverse().value() * p;
 			Assert::AreEqual(Point(-sqrt(2.0f) / 2.0f, 0.0f, sqrt(2.0f) / 2.0f), rotatedHalf);
 			Assert::AreEqual(Point(-1.0f, 0.0f, 0.0f), rotatedFull);
 		}
@@ -591,8 +591,8 @@ namespace RaytracerTests
 		{
 			using std::sqrt;
 			Vector p(0.0f, 0.0f, 1.0f);
-			Vector rotatedHalf = RotationY(Radians(45.0f)).Inverse().second * p;
-			Vector rotatedFull = RotationY(Radians(90.0f)).Inverse().second * p;
+			Vector rotatedHalf = RotationY(Radians(45.0f)).Inverse().value() * p;
+			Vector rotatedFull = RotationY(Radians(90.0f)).Inverse().value() * p;
 			Assert::AreEqual(Vector(-sqrt(2.0f) / 2.0f, 0.0f, sqrt(2.0f) / 2.0f), rotatedHalf);
 			Assert::AreEqual(Vector(-1.0f, 0.0f, 0.0f), rotatedFull);
 		}
@@ -621,8 +621,8 @@ namespace RaytracerTests
 		{
 			using std::sqrt;
 			Point p(1.0f, 0.0f, 0.0f);
-			Point rotatedHalf = RotationZ(Radians(45.0f)).Inverse().second * p;
-			Point rotatedFull = RotationZ(Radians(90.0f)).Inverse().second * p;
+			Point rotatedHalf = RotationZ(Radians(45.0f)).Inverse().value() * p;
+			Point rotatedFull = RotationZ(Radians(90.0f)).Inverse().value() * p;
 			Assert::AreEqual(Point(sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f, 0.0f), rotatedHalf);
 			Assert::AreEqual(Point(0.0f, -1.0f, 0.0f), rotatedFull);
 		}
@@ -631,8 +631,8 @@ namespace RaytracerTests
 		{
 			using std::sqrt;
 			Vector p(1.0f, 0.0f, 0.0f);
-			Vector rotatedHalf = RotationZ(Radians(45.0f)).Inverse().second * p;
-			Vector rotatedFull = RotationZ(Radians(90.0f)).Inverse().second * p;
+			Vector rotatedHalf = RotationZ(Radians(45.0f)).Inverse().value() * p;
+			Vector rotatedFull = RotationZ(Radians(90.0f)).Inverse().value() * p;
 			Assert::AreEqual(Vector(sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f, 0.0f), rotatedHalf);
 			Assert::AreEqual(Vector(0.0f, -1.0f, 0.0f), rotatedFull);
 		}
