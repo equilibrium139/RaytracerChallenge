@@ -32,6 +32,11 @@ namespace Microsoft
 				return L"{ " + std::to_wstring(c.r) + L", " + std::to_wstring(c.g) + L", "
 					+ std::to_wstring(c.b) + L" }";
 			}
+
+			template<> static std::wstring ToString<Mat4>(const Mat4& m)
+			{
+				return L"Mat4";
+			}
 		}
 	}
 }
@@ -461,6 +466,267 @@ namespace RaytracerTests
 			};
 
 			Assert::AreEqual(-4071.f, m.Determinant());
+		}
+
+		TEST_METHOD(TranslationMat4Point)
+		{
+			Point v(-3.0f, 4.0f, 5.0f);
+			Point translated = Translation(5.0f, -3.0f, 2.0f) * v;
+			Assert::AreEqual(Point(2.0f, 1.0f, 7.0f), translated);
+		}
+
+		TEST_METHOD(TranslationInvertedMat4Point)
+		{
+			Point v(-3.0f, 4.0f, 5.0f);
+			Point translated = Translation(5.0f, -3.0f, 2.0f).Inverse().second * v;
+			Assert::AreEqual(Point(-8.0f, 7.0f, 3.0f), translated);
+		}
+
+		TEST_METHOD(TranslationMat4Vector)
+		{
+			Vector v(-3.0f, 4.0f, 5.0f);
+			Vector translated = Translation(5.0f, -3.0f, 2.0f) * v;
+			Assert::AreEqual(v, translated);
+		}
+
+		TEST_METHOD(ScalingMat4Point)
+		{
+			Point p(-4.0f, 6.0f, 8.0f);
+			Point scaled = Scaling(2.0f, 3.0f, 4.0f) * p;
+			Assert::AreEqual(Point(-8.0f, 18.0f, 32.0f), scaled);
+		}
+
+		TEST_METHOD(ScalingMat4Vector)
+		{
+			Vector v(-4.0f, 6.0f, 8.0f);
+			Vector scaled = Scaling(2.0f, 3.0f, 4.0f) * v;
+			Assert::AreEqual(Vector(-8.0f, 18.0f, 32.0f), scaled);
+		}
+
+		TEST_METHOD(ScalingInvertedMat4Point)
+		{
+			Point p(-4.0f, 6.0f, 8.0f);
+			Point scaled = Scaling(2.0f, 3.0f, 4.0f).Inverse().second * p;
+			Assert::AreEqual(Point(-2.0f, 2.0f, 2.0), scaled);
+		}
+
+		TEST_METHOD(ScalingInvertedMat4Vector)
+		{
+			Vector p(-4.0f, 6.0f, 8.0f);
+			Vector scaled = Scaling(2.0f, 3.0f, 4.0f).Inverse().second * p;
+			Assert::AreEqual(Vector(-2.0f, 2.0f, 2.0), scaled);
+		}
+
+		TEST_METHOD(RotationXPoint)
+		{
+			using std::sqrt;
+			Point p(0.0f, 1.0f, 0.0f);
+			Point rotatedHalf = RotationX(Radians(45.0f)) * p;
+			Point rotatedFull = RotationX(Radians(90.0f)) * p;
+			Assert::AreEqual(Point(0.0f, sqrt(2.0f) / 2.0f, sqrt(2.0f) / 2.0f), rotatedHalf);
+			Assert::AreEqual(Point(0.0f, 0.0f, 1.0f), rotatedFull);
+		}
+
+		TEST_METHOD(RotationXVector)
+		{
+			using std::sqrt;
+			Vector p(0.0f, 1.0f, 0.0f);
+			Vector rotatedHalf = RotationX(Radians(45.0f)) * p;
+			Vector rotatedFull = RotationX(Radians(90.0f)) * p;
+			Assert::AreEqual(Vector(0.0f, sqrt(2.0f) / 2.0f, sqrt(2.0f) / 2.0f), rotatedHalf);
+			Assert::AreEqual(Vector(0.0f, 0.0f, 1.0f), rotatedFull);
+		}
+
+		TEST_METHOD(RotationXInversePoint)
+		{
+			using std::sqrt;
+			Point p(0.0f, 1.0f, 0.0f);
+			Point rotatedHalf = RotationX(Radians(45.0f)).Inverse().second * p;
+			Point rotatedFull = RotationX(Radians(90.0f)).Inverse().second * p;
+			Assert::AreEqual(Point(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f), rotatedHalf);
+			Assert::AreEqual(Point(0.0f, 0.0f, -1.0f), rotatedFull);
+		}
+
+		TEST_METHOD(RotationXInverseVector)
+		{
+			using std::sqrt;
+			Vector p(0.0f, 1.0f, 0.0f);
+			Vector rotatedHalf = RotationX(Radians(45.0f)).Inverse().second * p;
+			Vector rotatedFull = RotationX(Radians(90.0f)).Inverse().second * p;
+			Assert::AreEqual(Vector(0.0f, sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f), rotatedHalf);
+			Assert::AreEqual(Vector(0.0f, 0.0f, -1.0f), rotatedFull);
+		}
+
+		TEST_METHOD(RotationYPoint)
+		{
+			using std::sqrt;
+			Point p(0.0f, 0.0f, 1.0f);
+			Point rotatedHalf = RotationY(Radians(45.0f)) * p;
+			Point rotatedFull = RotationY(Radians(90.0f)) * p;
+			Assert::AreEqual(Point(sqrt(2.0f) / 2.0f, 0.0f , sqrt(2.0f) / 2.0f), rotatedHalf);
+			Assert::AreEqual(Point(1.0f, 0.0f, 0.0f), rotatedFull);
+		}
+
+		TEST_METHOD(RotationYVector)
+		{
+			using std::sqrt;
+			Vector p(0.0f, 0.0f, 1.0f);
+			Vector rotatedHalf = RotationY(Radians(45.0f)) * p;
+			Vector rotatedFull = RotationY(Radians(90.0f)) * p;
+			Assert::AreEqual(Vector(sqrt(2.0f) / 2.0f, 0.0f, sqrt(2.0f) / 2.0f), rotatedHalf);
+			Assert::AreEqual(Vector(1.0f, 0.0f, 0.0f), rotatedFull);
+		}
+
+		TEST_METHOD(RotationYInversePoint)
+		{
+			using std::sqrt;
+			Point p(0.0f, 0.0f, 1.0f);
+			Point rotatedHalf = RotationY(Radians(45.0f)).Inverse().second * p;
+			Point rotatedFull = RotationY(Radians(90.0f)).Inverse().second * p;
+			Assert::AreEqual(Point(-sqrt(2.0f) / 2.0f, 0.0f, sqrt(2.0f) / 2.0f), rotatedHalf);
+			Assert::AreEqual(Point(-1.0f, 0.0f, 0.0f), rotatedFull);
+		}
+
+		TEST_METHOD(RotationYInverseVector)
+		{
+			using std::sqrt;
+			Vector p(0.0f, 0.0f, 1.0f);
+			Vector rotatedHalf = RotationY(Radians(45.0f)).Inverse().second * p;
+			Vector rotatedFull = RotationY(Radians(90.0f)).Inverse().second * p;
+			Assert::AreEqual(Vector(-sqrt(2.0f) / 2.0f, 0.0f, sqrt(2.0f) / 2.0f), rotatedHalf);
+			Assert::AreEqual(Vector(-1.0f, 0.0f, 0.0f), rotatedFull);
+		}
+
+		TEST_METHOD(RotationZPoint)
+		{
+			using std::sqrt;
+			Point p(1.0f, 0.0f, 0.0f);
+			Point rotatedHalf = RotationZ(Radians(45.0f)) * p;
+			Point rotatedFull = RotationZ(Radians(90.0f)) * p;
+			Assert::AreEqual(Point(sqrt(2.0f) / 2.0f, sqrt(2.0f) / 2.0f, 0.0f) , rotatedHalf);
+			Assert::AreEqual(Point(0.0f, 1.0f, 0.0f), rotatedFull);
+		}
+
+		TEST_METHOD(RotationZVector)
+		{
+			using std::sqrt;
+			Vector p(1.0f, 0.0f, 0.0f);
+			Vector rotatedHalf = RotationZ(Radians(45.0f)) * p;
+			Vector rotatedFull = RotationZ(Radians(90.0f)) * p;
+			Assert::AreEqual(Vector(sqrt(2.0f) / 2.0f, sqrt(2.0f) / 2.0f, 0.0f), rotatedHalf);
+			Assert::AreEqual(Vector(0.0f, 1.0f, 0.0f), rotatedFull);
+		}
+
+		TEST_METHOD(RotationZInversePoint)
+		{
+			using std::sqrt;
+			Point p(1.0f, 0.0f, 0.0f);
+			Point rotatedHalf = RotationZ(Radians(45.0f)).Inverse().second * p;
+			Point rotatedFull = RotationZ(Radians(90.0f)).Inverse().second * p;
+			Assert::AreEqual(Point(sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f, 0.0f), rotatedHalf);
+			Assert::AreEqual(Point(0.0f, -1.0f, 0.0f), rotatedFull);
+		}
+
+		TEST_METHOD(RotationZInverseVector)
+		{
+			using std::sqrt;
+			Vector p(1.0f, 0.0f, 0.0f);
+			Vector rotatedHalf = RotationZ(Radians(45.0f)).Inverse().second * p;
+			Vector rotatedFull = RotationZ(Radians(90.0f)).Inverse().second * p;
+			Assert::AreEqual(Vector(sqrt(2.0f) / 2.0f, -sqrt(2.0f) / 2.0f, 0.0f), rotatedHalf);
+			Assert::AreEqual(Vector(0.0f, -1.0f, 0.0f), rotatedFull);
+		}
+
+		TEST_METHOD(ShearingXYPoint)
+		{
+			Point p(2.0f, 3.0f, 4.0f);
+			Point sheared = Shearing(1.0f) * p;
+			Assert::AreEqual(Point(5.0f, 3.0f, 4.0f), sheared);
+		}
+
+		TEST_METHOD(ShearingXYVector)
+		{
+			Vector p(2.0f, 3.0f, 4.0f);
+			Vector sheared = Shearing(1.0f) * p;
+			Assert::AreEqual(Vector(5.0f, 3.0f, 4.0f), sheared);
+		}
+
+		TEST_METHOD(ShearingXZPoint)
+		{
+			Point p(2.0f, 3.0f, 4.0f);
+			Point sheared = Shearing(0.0f, 1.0f) * p;
+			Assert::AreEqual(Point(6.0f, 3.0f, 4.0f), sheared);
+		}
+
+		TEST_METHOD(ShearingXZVector)
+		{
+			Vector p(2.0f, 3.0f, 4.0f);
+			Vector sheared = Shearing(0.0f, 1.0f) * p;
+			Assert::AreEqual(Vector(6.0f, 3.0f, 4.0f), sheared);
+		}
+
+		TEST_METHOD(ShearingYXPoint)
+		{
+			Point p(2.0f, 3.0f, 4.0f);
+			Point sheared = Shearing(0.0f, 0.0f, 1.0f) * p;
+			Assert::AreEqual(Point(2.0f, 5.0f, 4.0f), sheared);
+		}
+
+		TEST_METHOD(ShearingYXVector)
+		{
+			Vector p(2.0f, 3.0f, 4.0f);
+			Vector sheared = Shearing(0.0f, 0.0f, 1.0f) * p;
+			Assert::AreEqual(Vector(2.0f, 5.0f, 4.0f), sheared);
+		}
+
+		TEST_METHOD(ShearingYZPoint)
+		{
+			Point p(2.0f, 3.0f, 4.0f);
+			Point sheared = Shearing(0.0f, 0.0f, 0.0f, 1.0f) * p;
+			Assert::AreEqual(Point(2.0f, 7.0f, 4.0f), sheared);
+		}
+
+		TEST_METHOD(ShearingYZVector)
+		{
+			Vector p(2.0f, 3.0f, 4.0f);
+			Vector sheared = Shearing(0.0f, 0.0f, 0.0f, 1.0f) * p;
+			Assert::AreEqual(Vector(2.0f, 7.0f, 4.0f), sheared);
+		}
+
+		TEST_METHOD(ShearingZXPoint)
+		{
+			Point p(2.0f, 3.0f, 4.0f);
+			Point sheared = Shearing(0.0f, 0.0f, 0.0f, 0.0f, 1.0f) * p;
+			Assert::AreEqual(Point(2.0f, 3.0f, 6.0f), sheared);
+		}
+
+		TEST_METHOD(ShearingZXVector)
+		{
+			Vector p(2.0f, 3.0f, 4.0f);
+			Vector sheared = Shearing(0.0f, 0.0f, 0.0f, 0.0f, 1.0f) * p;
+			Assert::AreEqual(Vector(2.0f, 3.0f, 6.0f), sheared);
+		}
+
+		TEST_METHOD(ShearingZYPoint)
+		{
+			Point p(2.0f, 3.0f, 4.0f);
+			Point sheared = Shearing(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f) * p;
+			Assert::AreEqual(Point(2.0f, 3.0f, 7.0f), sheared);
+		}
+
+		TEST_METHOD(ShearingZYVector)
+		{
+			Vector p(2.0f, 3.0f, 4.0f);
+			Vector sheared = Shearing(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f) * p;
+			Assert::AreEqual(Vector(2.0f, 3.0f, 7.0f), sheared);
+		}
+
+		TEST_METHOD(CombiningTransformations)
+		{
+			Point p(1.0f, 0.0f, 1.0f);
+			Point transformed = Translation(10.0f, 5.0f, 7.0f) * Scaling(5.0f, 5.0f, 5.0f) *
+								RotationX(Radians(90.0f)) * p;
+			Assert::AreEqual(Point(15.0f, 0.0f, 7.0f), transformed);
 		}
 	};
 }

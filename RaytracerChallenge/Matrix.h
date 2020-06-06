@@ -23,6 +23,22 @@ public:
 		assert(list.size() == N * N);
 		mat = list;
 	}
+	explicit Matrix(float diag)
+	{
+		const auto size = N * N;
+		mat.reserve(size);
+		for (std::size_t i = 0; i < size; ++i)
+		{
+			if (i / N == i % N)
+			{
+				mat.push_back(diag);
+			}
+			else
+			{
+				mat.push_back(0.0f);
+			}
+		}
+	}
 	float& operator()(int row, int column)
 	{
 		return mat[row * N + column];
@@ -121,12 +137,7 @@ public:
 
 	static Matrix Identity() 
 	{
-		//TODO potential optimization
-		Matrix m;
-		for (std::size_t i = 0; i < N; ++i)
-		{
-			m(i, i) = 1.0f;
-		}
+		static Matrix m(1.0f);
 		return m;
 	}
 private:
@@ -145,6 +156,91 @@ template<> float Matrix<2>::Determinant() const
 {
 	return mat[0] * mat[3] - mat[1] * mat[2];
 }
+
+inline Mat4 Translation(float x, float y, float z)
+{
+	Mat4 mat = Mat4::Identity();
+	mat(0, 3) = x;
+	mat(1, 3) = y;
+	mat(2, 3) = z;
+	return mat;
+}
+
+inline Mat4 Scaling(float x, float y, float z)
+{
+	Mat4 mat = Mat4::Identity();
+	mat(0, 0) = x;
+	mat(1, 1) = y;
+	mat(2, 2) = z;
+	return mat;
+}
+
+inline Mat4 RotationX(float radians)
+{
+	float cosine = std::cos(radians);
+	float sine = std::sin(radians);
+	return {
+		1.0f, 0.0f, 0.0f, 0.0f,
+		0.0f, cosine, -sine, 0.0f,
+		0.0f, sine, cosine, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	};
+}
+
+inline Mat4 RotationY(float radians)
+{
+	float cosine = std::cos(radians);
+	float sine = std::sin(radians);
+	return {
+		cosine, 0.0f, sine, 0.0f,
+		0.0f, 1.0f, 0.0f, 0.0f,
+		-sine, 0.0f, cosine, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	};
+}
+
+inline Mat4 RotationZ(float radians)
+{
+	float cosine = std::cos(radians);
+	float sine = std::sin(radians);
+	return {
+		cosine, -sine, 0.0f, 0.0f,
+		sine, cosine, 0.0f, 0.0f,
+		0.0f, 0.0f, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	};
+}
+
+inline Mat4 Shearing(float xy = 0.0f, float xz = 0.0f, float yx = 0.0f, float yz = 0.0f, float zx = 0.0f, float zy = 0.0f)
+{
+	return
+	{
+		1.0f, xy, xz, 0.0f,
+		yx, 1.0f, yz, 0.0f,
+		zx, zy, 1.0f, 0.0f,
+		0.0f, 0.0f, 0.0f, 1.0f
+	};
+}
+
+//inline Mat4 Transformation(const Mat4& rotation, const Mat4 scaling, const Mat4 translating)
+//{
+//	/*Mat4 combined = rotation * scaling * translating;
+//	return combined;*/
+//}
+
+//inline Mat4 Rotation(float radians, const Vector& n)
+//{
+//	assert(Equals(n.Magnitude(), 1.0f));
+//	float cosine = std::cos(radians);
+//	float sine = std::sin(radians);
+//	float cMinus = 1.0f - cosine; // factored out because it's in every term in matrix
+//	return {
+//		n.x * n.x * cMinus + cosine, n.x * n.y * cMinus + n.z * sine, n.x * n.z * cMinus - n.y * sine, 0.0f,
+//		n.x * n.y * cMinus - n.z * sine, n.y * n.y * cMinus + cosine, n.y * n.z * cMinus + n.x * sine, 0.0f,
+//		n.x * n.z * cMinus + n.y * sine, n.y * n.z * cMinus - n.x * sine, n.z * n.z * cMinus + cosine, 0.0f,
+//		0.0f,							0.0f,						   0.0f,                           1.0f
+//	};
+//}
 
 static float Dot(const Mat4& lhs, int row, const Mat4& rhs, int column)
 {

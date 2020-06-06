@@ -40,23 +40,28 @@ int main()
 	std::ofstream ofs("test.ppm");
 	ofs << fileContents;*/
 
-	Mat4 m
-	{
-		-5, 2, 6, -8,
-		1, -5, 1, 8,
-		7, 7, -6, -7,
-		1, -3, 7, 4
-	};
+	/*Point p(1.0f, 0.0f, 1.0f);
+	p = RotationX(Radians(90.0f)) * p; 
+	p = Scaling(5.0f, 5.0f, 5.0f) * p;
+	p = Translation(15.0f, 0.0f, 7.)
+	total = total * Translation(15.0f, 0.0f, 7.0f);
+	std::cout << total << '\n';*/
 
-	auto inverse = m.Inverse();
-	Mat4 expected
+	Canvas c(400, 400);
+	Point hour(1.0f, 0.0f, 0.0f);
+	float rotationDegrees = 0.0f;
+	const float radius = 400.0f * (3.0f / 8.0f);
+	std::cout << radius << '\n';
+	for (int i = 0; i < 12; ++i)
 	{
-		0.21805f, 0.45113f, 0.24060f, -0.04511f,
-		-0.80827f, -1.45677f, -0.44361f, 0.52068f,
-		0.07895f, -0.22368f, -0.05263f, 0.19737f,
-		-0.52256f, -0.81391f, -0.30075f, 0.30639f
-	};
+		auto point = Translation(200.0f, 200.0f, 0.0f) * Scaling(radius, radius, 1.0f) * 
+			RotationZ(Radians(rotationDegrees)) * hour;
+		// std::cout << point.x << '\t' << point.y << '\n';
+		c.PutPixel((int)point.x, (int)point.y, Color(1.0f, 1.0f, 1.0f));
+		rotationDegrees += 30.0f;
+	}
 
-	std::cout << inverse.second << '\n';
-	std::cout << expected << '\n';
+	auto fileContents = CanvasToPPM(c);
+	std::ofstream ofs("test.ppm");
+	ofs << fileContents;
 }
