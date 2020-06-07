@@ -42,3 +42,8 @@ inline Point operator-(Point lhs, const Vector& rhs)
 	lhs -= rhs;
 	return lhs;
 }
+
+inline Vector operator-(Point lhs, const Point& rhs)
+{
+	return Vector(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z);
+}

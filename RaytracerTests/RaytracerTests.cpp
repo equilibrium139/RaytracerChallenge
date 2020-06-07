@@ -8,6 +8,10 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 #include "../RaytracerChallenge/Color.h"
 #include "../RaytracerChallenge/Canvas.h"
 #include "../RaytracerChallenge/Matrix.h"
+#include "../RaytracerChallenge/Ray.h"
+#include "../RaytracerChallenge/Sphere.h"
+#include "../RaytracerChallenge/Intersection.h"
+
 
 namespace Microsoft
 {
@@ -727,6 +731,86 @@ namespace RaytracerTests
 			Point transformed = Translation(10.0f, 5.0f, 7.0f) * Scaling(5.0f, 5.0f, 5.0f) *
 								RotationX(Radians(90.0f)) * p;
 			Assert::AreEqual(Point(15.0f, 0.0f, 7.0f), transformed);
+		}
+	};
+
+	TEST_CLASS(RayTests)
+	{
+		TEST_METHOD(Ctor)
+		{
+			Ray ray{ Point(1.0f, 2.0f, 3.0f), Vector(4.0f, 5.0f, 6.0f) };
+			Assert::AreEqual(Point(1.0f, 2.0f, 3.0f), ray.origin);
+			Assert::AreEqual(Vector(4.0f, 5.0f, 6.0f), ray.direction);
+		}
+
+		TEST_METHOD(PointMethod)
+		{
+			Ray ray{ Point(2.0f, 3.0f, 4.0f), Vector(1.0f, 0.0f, 0.0f) };
+			Assert::AreEqual(Point(2.0f, 3.0f, 4.0f), ray.Position(0.0f));
+			Assert::AreEqual(Point(3.0f, 3.0f, 4.0f), ray.Position(1.0f));
+			Assert::AreEqual(Point(1.0f, 3.0f, 4.0f), ray.Position(-1.0f));
+			Assert::AreEqual(Point(4.5f, 3.0f, 4.0f), ray.Position(2.5f));
+		}
+
+		TEST_METHOD(RaySphereIntersection2Points)
+		{
+			Ray ray{ Point(0.0f, 0.0f, -5.0f), Vector(0.0f, 0.0f, 1.0f) };
+			Sphere s;
+			auto intersections = ray.Intersect(s);
+			Assert::AreEqual(true, intersections.first.has_value());
+			Assert::AreEqual(true, intersections.second.has_value());
+			Assert::AreEqual(4.0f, intersections.first.value());
+			Assert::AreEqual(6.0f, intersections.second.value());
+		}
+
+		TEST_METHOD(RaySphereIntersection1Points)
+		{
+			Ray ray{ Point(0.0f, 1.0f, -5.0f), Vector(0.0f, 0.0f, 1.0f) };
+			Sphere s;
+			auto intersections = ray.Intersect(s);
+			Assert::AreEqual(true, intersections.first.has_value());
+			Assert::AreEqual(true, intersections.second.has_value());
+			Assert::AreEqual(5.0f, intersections.first.value());
+			Assert::AreEqual(5.0f, intersections.second.value());
+		}
+
+		TEST_METHOD(RaySphereIntersection0Points)
+		{
+			Ray ray{ Point(0.0f, 2.0f, -5.0f), Vector(0.0f, 0.0f, 1.0f) };
+			Sphere s;
+			auto intersections = ray.Intersect(s);
+			Assert::AreEqual(false, intersections.first.has_value());
+			Assert::AreEqual(false, intersections.second.has_value());
+		}
+
+		TEST_METHOD(RayOriginInsideSphere)
+		{
+			Ray ray{ Point(0.0f, 0.0f, 0.0f), Vector(0.0f, 0.0f, 1.0f) };
+			Sphere s;
+			auto intersections = ray.Intersect(s);
+			Assert::AreEqual(true, intersections.first.has_value());
+			Assert::AreEqual(true, intersections.second.has_value());
+			Assert::AreEqual(-1.0f, intersections.first.value());
+			Assert::AreEqual(1.0f, intersections.second.value());
+		}
+
+		TEST_METHOD(SphereBehindRay)
+		{
+			Ray ray{ Point(0.0f, 0.0f, 5.0f), Vector(0.0f, 0.0f, 1.0f) };
+			Sphere s;
+			auto intersections = ray.Intersect(s);
+			Assert::AreEqual(true, intersections.first.has_value());
+			Assert::AreEqual(true, intersections.second.has_value());
+			Assert::AreEqual(-6.0f, intersections.first.value());
+			Assert::AreEqual(-4.0f, intersections.second.value());
+		}
+
+		TEST_METHOD(IntersectionCtor)
+		{
+			Sphere s;
+			Intersection intersection{ s, 3.5f };
+			Assert::AreEqual(s, intersection.object);
+			Assert::AreEqual(3.5f, intersection.t);
 		}
 	};
 }

@@ -1,5 +1,7 @@
 #include "Point.h"
 #include "Vector.h"
+#include "Sphere.h"	
+#include "Ray.h"
 
 #include <iostream>
 #include <fstream>
@@ -47,18 +49,38 @@ int main()
 	total = total * Translation(15.0f, 0.0f, 7.0f);
 	std::cout << total << '\n';*/
 
+	//Canvas c(400, 400);
+	//Point hour(1.0f, 0.0f, 0.0f);
+	//float rotationDegrees = 0.0f;
+	//const float radius = 400.0f * (3.0f / 8.0f);
+	//std::cout << radius << '\n';
+	//for (int i = 0; i < 12; ++i)
+	//{
+	//	auto point = Translation(200.0f, 200.0f, 0.0f) * Scaling(radius, radius, 1.0f) * 
+	//		RotationZ(Radians(rotationDegrees)) * hour;
+	//	// std::cout << point.x << '\t' << point.y << '\n';
+	//	c.PutPixel((int)point.x, (int)point.y, Color(1.0f, 1.0f, 1.0f));
+	//	rotationDegrees += 30.0f;
+	//}
+
+	//auto fileContents = CanvasToPPM(c);
+	//std::ofstream ofs("test.ppm");
+	//ofs << fileContents;
+
 	Canvas c(400, 400);
-	Point hour(1.0f, 0.0f, 0.0f);
-	float rotationDegrees = 0.0f;
-	const float radius = 400.0f * (3.0f / 8.0f);
-	std::cout << radius << '\n';
-	for (int i = 0; i < 12; ++i)
+	Sphere s;
+	s.transform = Translation(200.0f, 200.0f, 0.0f) * Scaling(100.0f, 100.0f, 1.0f) * s.transform;
+	for (int i = 0; i < c.width; ++i)
 	{
-		auto point = Translation(200.0f, 200.0f, 0.0f) * Scaling(radius, radius, 1.0f) * 
-			RotationZ(Radians(rotationDegrees)) * hour;
-		// std::cout << point.x << '\t' << point.y << '\n';
-		c.PutPixel((int)point.x, (int)point.y, Color(1.0f, 1.0f, 1.0f));
-		rotationDegrees += 30.0f;
+		for (int j = 0; j < c.height; ++j)
+		{
+			Ray ray{ { (float)i, (float)j, -5.0f }, { 0.0f, 0.0f, 1.0f } };
+			auto intersections = ray.Intersect(s);
+			if (intersections.first.has_value())
+			{
+				c.PutPixel(i, j, Color(1.0f, 0.0f, 0.0f));
+			}
+		}
 	}
 
 	auto fileContents = CanvasToPPM(c);
