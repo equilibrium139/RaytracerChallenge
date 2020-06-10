@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Math.h"
+#include "MathUtilities.h"
 #include "Vector.h"
 
 struct Point
@@ -9,20 +9,8 @@ struct Point
 		:x(0), y(0), z(0) {}
 	Point(float x, float y, float z)
 		:x(x), y(y), z(z) {}
-	Point& operator+=(const Vector& rhs)
-	{
-		x += rhs.x;
-		y += rhs.y;
-		z += rhs.z;
-		return *this;
-	}
-	Point& operator-=(const Vector& rhs)
-	{
-		x -= rhs.x;
-		y -= rhs.y;
-		z -= rhs.z;
-		return *this;
-	}
+	Point& operator+=(const Vector& rhs);
+	Point& operator-=(const Vector& rhs);
 	float x, y, z;
 };
 

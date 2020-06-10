@@ -9,4 +9,14 @@ struct Material
 	float diffuse = 0.9f;
 	float specular = 0.9f;
 	float shininess = 200.0f;
+	bool operator==(const Material& lhs) const
+	{
+		return color == lhs.color && Equals(ambient, lhs.ambient) &&
+			Equals(diffuse, lhs.diffuse) && Equals(specular, lhs.specular)
+			&& Equals(shininess, lhs.shininess);
+	}
+	bool operator!=(const Material& rhs) const
+	{
+		return !(*this == rhs);
+	}
 };

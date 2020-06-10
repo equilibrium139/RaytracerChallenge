@@ -8,7 +8,7 @@
 #include <cassert>
 #include <iomanip>
 
-#include "Math.h"
+#include "MathUtilities.h"
 #include "Vector.h"
 #include "Point.h"
 
@@ -48,15 +48,15 @@ public:
 	{
 		return mat[row * N + column];
 	}
-	bool operator==(const Matrix& rhs)
+	bool operator==(const Matrix& rhs) const
 	{
 		return std::equal(mat.begin(), mat.end(), rhs.mat.begin(), Equals);
 	}
-	bool operator!=(const Matrix& rhs)
+	bool operator!=(const Matrix& rhs) const
 	{
 		return !(*this == rhs);
 	}
-	Matrix Transpose() const
+	Matrix GetTransposed() const
 	{
 		Matrix transposed;
 		for (std::size_t i = 0; i < transposed.mat.size(); ++i)
@@ -110,7 +110,7 @@ public:
 				cofactors(i, j) = Cofactor(i, j);
 			}
 		}
-		Matrix transposed = cofactors.Transpose();
+		Matrix transposed = cofactors.GetTransposed();
 		std::for_each(transposed.mat.begin(), transposed.mat.end(),
 			[determinant](float& entry)
 			{
@@ -154,7 +154,7 @@ typedef Matrix<2> Mat2;
 typedef Matrix<3> Mat3;
 typedef Matrix<4> Mat4;
 
-template<> float Matrix<2>::Determinant() const
+template<> inline float Matrix<2>::Determinant() const
 {
 	return mat[0] * mat[3] - mat[1] * mat[2];
 }
@@ -224,26 +224,6 @@ inline Mat4 Shearing(float xy = 0.0f, float xz = 0.0f, float yx = 0.0f, float yz
 	};
 }
 
-//inline Mat4 Transformation(const Mat4& rotation, const Mat4 scaling, const Mat4 translating)
-//{
-//	/*Mat4 combined = rotation * scaling * translating;
-//	return combined;*/
-//}
-
-//inline Mat4 Rotation(float radians, const Vector& n)
-//{
-//	assert(Equals(n.Magnitude(), 1.0f));
-//	float cosine = std::cos(radians);
-//	float sine = std::sin(radians);
-//	float cMinus = 1.0f - cosine; // factored out because it's in every term in matrix
-//	return {
-//		n.x * n.x * cMinus + cosine, n.x * n.y * cMinus + n.z * sine, n.x * n.z * cMinus - n.y * sine, 0.0f,
-//		n.x * n.y * cMinus - n.z * sine, n.y * n.y * cMinus + cosine, n.y * n.z * cMinus + n.x * sine, 0.0f,
-//		n.x * n.z * cMinus + n.y * sine, n.y * n.z * cMinus - n.x * sine, n.z * n.z * cMinus + cosine, 0.0f,
-//		0.0f,							0.0f,						   0.0f,                           1.0f
-//	};
-//}
-
 static float Dot(const Mat4& lhs, int row, const Mat4& rhs, int column)
 {
 	float dot = 0.0f;
@@ -299,53 +279,3 @@ inline Point operator*(const Mat4& lhs, const Point& rhs)
 	product.z = Dot(lhs, 2, rhs);
 	return product;
 }
-
-//inline float Determinant(const Mat2& mat)
-//{
-//	return mat(0, 0) * mat(1, 1) - mat(0, 1) * mat(1, 0);
-//}
-//
-//inline float Determinant(const Mat3& mat);
-//inline float Determinant(const Mat4& mat);
-//
-//inline float Minor(const Mat3& mat, int row, int column) 
-//{
-//	return Determinant(mat.Submatrix(row, column));
-//}
-//
-//inline float Minor(const Mat4& mat, int row, int column)
-//{
-//	return Determinant(mat.Submatrix(row, column));
-//}
-//
-//inline float Cofactor(const Mat3& mat, int row, int column)
-//{
-//	auto minor = Minor(mat, row, column);
-//	return (row + column) % 2 == 0 ? minor : -minor;
-//}
-//
-//inline float Cofactor(const Mat4& mat, int row, int column)
-//{
-//	auto minor = Minor(mat, row, column);
-//	return (row + column) % 2 == 0 ? minor : -minor;
-//}
-//
-//float Determinant(const Mat3& mat) 
-//{
-//	float determinant = 0.0f;
-//	for (std::size_t i = 0; i < 3; ++i)
-//	{
-//		determinant += mat(0, i) * Cofactor(mat, 0, i);
-//	}
-//	return determinant;
-//}
-//
-//float Determinant(const Mat4& mat)
-//{
-//	float determinant = 0.0f;
-//	for (std::size_t i = 0; i < 4; ++i)
-//	{
-//		determinant += mat(0, i) * Cofactor(mat, 0, i);
-//	}
-//	return determinant;
-//}

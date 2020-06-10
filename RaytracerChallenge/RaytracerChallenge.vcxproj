@@ -152,8 +152,8 @@
   <ItemGroup>
     <ClCompile Include="Canvas.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="Lighting.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Ray.cpp" />
     <ClCompile Include="Sphere.cpp" />
@@ -165,7 +165,7 @@
     <ClInclude Include="Intersection.h" />
     <ClInclude Include="Lighting.h" />
     <ClInclude Include="Material.h" />
-    <ClInclude Include="Math.h" />
+    <ClInclude Include="MathUtilities.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Point.h" />
     <ClInclude Include="PointLight.h" />

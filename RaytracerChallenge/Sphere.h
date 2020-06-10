@@ -8,12 +8,12 @@ struct Sphere
 	Mat4 transform = Mat4::Identity();
 	Material mat;
 	Vector NormalAt(Point p);
+	bool operator==(const Sphere& rhs) const
+	{
+		return mat == rhs.mat && transform == rhs.transform;
+	}
+	bool operator!=(const Sphere& rhs) const
+	{
+		return !(*this == rhs);
+	}
 };
-
-inline Vector Sphere::NormalAt(Point p)
-{
-	Point objectPoint = transform.Inverse().value() * p;
-	Vector objectNormal = objectPoint - Point(0.0f, 0.0f, 0.0f);
-	Vector worldNormal = transform.Inverse().value().Transpose() * objectNormal;
-	return Normalize(worldNormal);
-}

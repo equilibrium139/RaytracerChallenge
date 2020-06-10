@@ -2,7 +2,7 @@
 
 #include <cmath>
 
-#include "Math.h"
+#include "MathUtilities.h"
 
 struct Vector
 {
@@ -10,45 +10,15 @@ struct Vector
 		:x(0), y(0), z(0) {}
 	Vector(float x, float y, float z)
 		:x(x), y(y), z(z) {}
-	Vector& operator+=(const Vector& rhs)
-	{
-		x += rhs.x;
-		y += rhs.y;
-		z += rhs.z;
-		return *this;
-	}
-	Vector& operator-=(const Vector& rhs)
-	{
-		x -= rhs.x;
-		y -= rhs.y;
-		z -= rhs.z;
-		return *this;
-	}
-	Vector& operator*=(float scalar)
-	{
-		x *= scalar;
-		y *= scalar;
-		z *= scalar;
-		return *this;
-	}
-	Vector& operator/=(float scalar)
-	{
-		x /= scalar;
-		y /= scalar;
-		z /= scalar;
-		return *this;
-	}
+	Vector& operator+=(const Vector& rhs);
+	Vector& operator-=(const Vector& rhs);
+	Vector& operator*=(float scalar);
+	Vector& operator/=(float scalar);
 	float Magnitude() const
 	{
 		return std::sqrt(x * x + y * y + z * z);
 	}
-	void Normalize()
-	{
-		float magnitude = Magnitude();
-		x /= magnitude;
-		y /= magnitude;
-		z /= magnitude;
-	}
+	void Normalize();
 	float x, y, z;
 };
 

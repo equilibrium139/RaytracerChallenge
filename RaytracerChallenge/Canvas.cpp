@@ -17,7 +17,7 @@ std::string CanvasToPPM(const Canvas& canvas)
 	int currentLineLength = 4; //255 + " "
 	const auto& pixels = canvas.GetPixels();
 	std::string colorInPPMFormat;
-	for (const auto& color : canvas.GetPixels())
+	for (const auto& color : pixels)
 	{
 		colorInPPMFormat = ColorToPPMFormat(color);
 		int lineLength = currentLineLength + colorInPPMFormat.size() + 1;
