@@ -11,6 +11,8 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 #include "../RaytracerChallenge/Ray.h"
 #include "../RaytracerChallenge/Sphere.h"
 #include "../RaytracerChallenge/Intersection.h"
+#include "../RaytracerChallenge/Lighting.h"
+#include "../RaytracerChallenge/World.h"
 
 
 namespace Microsoft
@@ -133,6 +135,23 @@ namespace RaytracerTests
 			Vector b(2, 3, 4);
 			Assert::AreEqual(Vector(-1, 2, -1), Cross(a, b));
 			Assert::AreEqual(Vector(1, -2, 1), Cross(b, a));
+		}
+
+		TEST_METHOD(Reflect45Degrees)
+		{
+			Vector v(1.0f, -1.0f, 0.0f);
+			Vector n(0.0f, 1.0f, 0.0f);
+			Vector reflected = Reflect(v, n);
+			Assert::AreEqual(Vector(1.0f, 1.0f, 0.0f), reflected);
+		}
+
+		TEST_METHOD(ReflectSlantedSurface)
+		{
+			Vector v(0.0f, -1.0f, 0.0f);
+			float f = std::sqrt(2.0f) / 2.0f;
+			Vector n(f, f, 0.0f);
+			Vector reflected = Reflect(v, n);
+			Assert::AreEqual(Vector(1.0f, 0.0f, 0.0f), reflected);
 		}
 	};
 
@@ -374,7 +393,7 @@ namespace RaytracerTests
 		TEST_METHOD(Transpose)
 		{
 			Mat4 a{ 0, 9, 3, 0, 9, 8, 0, 8, 1, 8, 5, 3, 0, 0, 5, 8};
-			Mat4 transposed = a.GetTransposed();
+			Mat4 transposed = a.Transpose();
 			Mat4 expected{ 0, 9, 1, 0, 9, 8, 8, 0, 3, 0, 5, 5, 0, 8, 3, 8 };
 			bool equal = transposed == expected;
 			Assert::AreEqual(true, equal);
@@ -383,7 +402,7 @@ namespace RaytracerTests
 		TEST_METHOD(TransposeIdentity)
 		{
 			Mat4 identity = Mat4::Identity();
-			Mat4 transposed = identity.GetTransposed();
+			Mat4 transposed = identity.Transpose();
 			Mat4 expected = Mat4::Identity();
 			bool equal = transposed == expected;
 			Assert::AreEqual(true, equal);
@@ -752,7 +771,7 @@ namespace RaytracerTests
 			Assert::AreEqual(Point(4.5f, 3.0f, 4.0f), ray.Position(2.5f));
 		}
 
-		TEST_METHOD(RaySphereIntersection2Points)
+		/*TEST_METHOD(RaySphereIntersection2Points)
 		{
 			Ray ray{ Point(0.0f, 0.0f, -5.0f), Vector(0.0f, 0.0f, 1.0f) };
 			Sphere s;
@@ -811,6 +830,122 @@ namespace RaytracerTests
 			Intersection intersection{ s, 3.5f };
 			Assert::AreEqual(s, intersection.object);
 			Assert::AreEqual(3.5f, intersection.t);
+		}*/
+	};
+
+	TEST_CLASS(SphereTests)
+	{
+		TEST_METHOD(NormalXAxis)
+		{
+			Sphere s;
+			Vector n = s.NormalAt(Point(1.0f, 0.0f, 0.0f));
+			Assert::AreEqual(Vector(1.0f, 0.0f, 0.0f), n);
 		}
+
+		TEST_METHOD(NormalYAxis)
+		{
+			Sphere s;
+			Vector n = s.NormalAt(Point(0.0f, 1.0f, 0.0f));
+			Assert::AreEqual(Vector(0.0f, 1.0f, 0.0f), n);
+		}
+
+		TEST_METHOD(NormalZAxis)
+		{
+			Sphere s;
+			Vector n = s.NormalAt(Point(0.0f, 0.0f, 1.0f));
+			Assert::AreEqual(Vector(0.0f, 0.0f, 1.0f), n);
+		}
+
+		TEST_METHOD(NormalNonaxialPoint)
+		{
+			Sphere s;
+			float f = std::sqrt(3.0f) / 3.0f;
+			Vector n = s.NormalAt(Point(f, f, f));
+			Assert::AreEqual(Vector(f, f, f), n);
+		}
+
+		TEST_METHOD(NormalTranslatedSphere)
+		{
+			Sphere s{Translation(0.0f, 1.0f, 0.0f)};
+			Vector n = s.NormalAt(Point(0.0f, 1.70711f, -0.70711f));
+			Assert::AreEqual(Vector(0.0f, 0.70711f, -0.70711f), n);
+		}
+
+		TEST_METHOD(NormalTransformedSphere)
+		{
+			Sphere s{ Scaling(1.0f, 0.5f, 1.0f) * RotationZ(Radians(36.0f)) };
+			float f = std::sqrt(2.0f) / 2.0f;
+			Vector n = s.NormalAt(Point(0.0f, f, -f));
+			Assert::AreEqual(Vector(0, 0.97014f, -0.24254f), n);
+		}
+	};
+
+	TEST_CLASS(LightingTests)
+	{
+		TEST_METHOD(LightingWithEyeBetweenLightandSurface)
+		{
+			Material m;
+			Point p(0.0f, 0.0f, 0.0f);
+			Vector eyeVec(0.0f, 0.0f, -1.0f);
+			Vector normal(0.0f, 0.0f, -1.0f);
+			PointLight pointLight{ Point(0.0f, 0.0f, -10.0f), Color(1.0f, 1.0f, 1.0f) };
+			Color result = Lighting(m, p, pointLight, eyeVec, normal);
+			Assert::AreEqual(Color(1.9f, 1.9f, 1.9f), result);
+		}
+
+		TEST_METHOD(LightingWithEyeAt45AngleToSurfaceNormal)
+		{
+			Material m;
+			Point p(0.0f, 0.0f, 0.0f);
+			float f = std::sqrt(2.0f) / 2.0f;
+			Vector eyeVec(0.0f, f, -f);
+			Vector normal(0.0f, 0.0f, -1.0f);
+			PointLight pointLight{ Point(0.0f, 0.0f, -10.0f), Color(1.0f, 1.0f, 1.0f) };
+			Color result = Lighting(m, p, pointLight, eyeVec, normal);
+			Assert::AreEqual(Color(1.0f, 1.0f, 1.0f), result);
+		}
+
+		TEST_METHOD(LightingWithEyeOppositeSurface45Degrees)
+		{
+			Material m;
+			Point p(0.0f, 0.0f, 0.0f);
+			Vector eyeVec(0.0f, 0.0f, -1.0f);
+			Vector normal(0.0f, 0.0f, -1.0f);
+			PointLight pointLight{ Point(0.0f, 10.0f, -10.0f), Color(1.0f, 1.0f, 1.0f) };
+			Color result = Lighting(m, p, pointLight, eyeVec, normal);
+			Assert::AreEqual(Color(0.7364f, 0.7364f, 0.7364f), result);
+		}
+
+		TEST_METHOD(LightingWithEyeInPathOfReflectionVector)
+		{
+			Material m;
+			Point p(0.0f, 0.0f, 0.0f);
+			float f = std::sqrt(2.0f) / 2.0f;
+			Vector eyeVec(0.0f, -f, -f);
+			Vector normal(0.0f, 0.0f, -1.0f);
+			PointLight pointLight{ Point(0.0f, 10.0f, -10.0f), Color(1.0f, 1.0f, 1.0f) };
+			Color result = Lighting(m, p, pointLight, eyeVec, normal);
+			Assert::AreEqual(Color(1.6364f, 1.6364f, 1.6364f), result);
+		}
+
+		TEST_METHOD(LightingWitLightBehindSurface)
+		{
+			Material m;
+			Point p(0.0f, 0.0f, 0.0f);
+			Vector eyeVec(0.0f, 0.0f, -1.0f);
+			Vector normal(0.0f, 0.0f, -1.0f);
+			PointLight pointLight{ Point(0.0f, 0.0f, 10.0f), Color(1.0f, 1.0f, 1.0f) };
+			Color result = Lighting(m, p, pointLight, eyeVec, normal);
+			Assert::AreEqual(Color(0.1f, 0.1f, 0.1), result);
+		}
+	};
+
+	TEST_CLASS(WorldTests)
+	{
+		World w;
+		Ray r{ Point(0.0f, 0.0f, -5.0f), Vector(0.0f, 0.0f, 1.0f) };
+		// auto doesn't work here whatevs f microsoft
+		std::vector<std::pair<std::optional<Intersection>, std::optional<Intersection>>> intersections = IntersectWorld(w, r);
+		
 	};
 }

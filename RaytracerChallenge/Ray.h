@@ -16,7 +16,7 @@ struct Ray
 	Vector direction;
 	Intersection hit;
 	Point Position(float t) { return origin + direction * t; }
-	std::pair<std::optional<Intersection>, std::optional<Intersection>> Intersect(const Sphere& s);
+	std::pair<std::optional<Intersection>, std::optional<Intersection>> Intersect(const Sphere& s) const;
 };
 
 inline Ray Transform(const Mat4& transform, const Ray& ray)

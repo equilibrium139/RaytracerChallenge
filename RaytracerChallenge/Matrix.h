@@ -56,7 +56,7 @@ public:
 	{
 		return !(*this == rhs);
 	}
-	Matrix GetTransposed() const
+	Matrix Transpose() const
 	{
 		Matrix transposed;
 		for (std::size_t i = 0; i < transposed.mat.size(); ++i)
@@ -110,7 +110,7 @@ public:
 				cofactors(i, j) = Cofactor(i, j);
 			}
 		}
-		Matrix transposed = cofactors.GetTransposed();
+		Matrix transposed = cofactors.Transpose();
 		std::for_each(transposed.mat.begin(), transposed.mat.end(),
 			[determinant](float& entry)
 			{
@@ -138,8 +138,9 @@ public:
 
 	static Matrix Identity() 
 	{
-		static Matrix m(1.0f);
-		return m;
+		// static Matrix m(1.0f);
+		return Matrix(1.0f);
+		// return m;
 	}
 private:
 	std::vector<float> mat;

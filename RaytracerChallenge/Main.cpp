@@ -2,6 +2,9 @@
 #include "Vector.h"
 #include "Sphere.h"	
 #include "Ray.h"
+#include "PointLight.h"
+#include "Lighting.h"
+#include "World.h"
 
 #include <iostream>
 #include <fstream>
@@ -67,23 +70,45 @@ int main()
 	//std::ofstream ofs("test.ppm");
 	//ofs << fileContents;
 
-	Canvas c(400, 400);
+	/*Canvas c(400, 400);
 	Sphere s;
-	s.transform = Translation(200.0f, 200.0f, 0.0f) * Scaling(100.0f, 100.0f, 1.0f) * s.transform;
-	for (int i = 0; i < c.width; ++i)
+	s.mat.color = Color(1.0f, 0.2f, 1.0f);
+	PointLight light{ Point(-10.0f, 10.0f, -10.0f), Color(1.0f, 1.0f, 1.0f) };
+
+	Point rayOrigin(0.0f, 0.0f, -10.0f);
+	float wallZ = 10.0f;
+	float wallSize = 7.0f;
+	float pixelSize = wallSize / 400.0f;
+	float half = wallSize / 2.0f;
+	for (int y = 0; y < c.height; ++y)
 	{
-		for (int j = 0; j < c.height; ++j)
+		float worldY = half - y * pixelSize;
+		for (int x = 0; x < c.width; ++x)
 		{
-			Ray ray{ { (float)i, (float)j, -5.0f }, { 0.0f, 0.0f, 1.0f } };
+			float worldX = -half + x * pixelSize;
+			Point position(worldX, worldY, wallZ);
+			Ray ray{ rayOrigin, Normalize(position - rayOrigin) };
 			auto intersections = ray.Intersect(s);
 			if (intersections.first.has_value())
 			{
-				c.PutPixel(i, j, Color(1.0f, 0.0f, 0.0f));
+				Point p = ray.Position(intersections.first.value().t);
+				Vector normal = intersections.first.value().object.NormalAt(p);
+				Vector eye = -ray.direction;
+				Color lighting = Lighting(s.mat, p, light, eye, normal);
+				c.PutPixel(x, y, lighting);
 			}
 		}
 	}
 
 	auto fileContents = CanvasToPPM(c);
-	std::ofstream ofs("test.ppm");
-	ofs << fileContents;
+	std::ofstream ofs("purpleSphere.ppm");
+	ofs << fileContents;*/
+
+	//World w;
+	Ray ray{ Point(0.0f, 0.0f, -5.0f), Vector(0.0f, 0.0f, 1.0f) };
+	//auto intersections = IntersectWorld(w, ray);
+	//std::cout << intersections[0].second.value().t << '\n';
+	Sphere s{ Scaling(0.5f, 0.5f, 0.5f), Material{Color(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f} };
+	auto intersects = ray.Intersect(s);
+	std::cout << intersects.second.value().t << '\n';
 }

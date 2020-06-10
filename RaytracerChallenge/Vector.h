@@ -103,3 +103,10 @@ inline Vector Normalize(Vector v)
 	v.Normalize();
 	return v;
 }
+
+inline Vector Reflect(const Vector& v, const Vector& n)
+{
+	auto vParallel = n * Dot(v, n);
+	auto vPerp = v - vParallel;
+	return -vParallel + vPerp;
+}
