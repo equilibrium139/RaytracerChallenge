@@ -2,7 +2,7 @@
 
 
 
-Vector Sphere::NormalAt(Point p)
+Vector Sphere::NormalAt(Point p) const
 {
 	Point objectPoint = transform.Inverse().value() * p;
 	Vector objectNormal = objectPoint - Point(0.0f, 0.0f, 0.0f);

@@ -5,6 +5,7 @@
 #include "PointLight.h"
 #include "Lighting.h"
 #include "World.h"
+#include "Camera.h"
 
 #include <iostream>
 #include <fstream>
@@ -92,7 +93,7 @@ int main()
 			if (intersections.first.has_value())
 			{
 				Point p = ray.Position(intersections.first.value().t);
-				Vector normal = intersections.first.value().object.NormalAt(p);
+				Vector normal = intersections.first.value().object->NormalAt(p);
 				Vector eye = -ray.direction;
 				Color lighting = Lighting(s.mat, p, light, eye, normal);
 				c.PutPixel(x, y, lighting);
@@ -104,11 +105,26 @@ int main()
 	std::ofstream ofs("purpleSphere.ppm");
 	ofs << fileContents;*/
 
+	World w;
+	Sphere floor{ Scaling(10.0f, 0.01f, 10.0f), Material{Color(1.0f, 0.9f, 0.9f), 0.1f, 0.9f, 0.0f} };
+	Sphere leftWall{ Translation(0.0f, 0.0f, 5.0f) * RotationY(-PI / 4.0f) * RotationX(PI / 2.0f) *
+					Scaling(10.0f, 0.01f, 10.0f), floor.mat };
+	Sphere rightWall{ Translation(0.0f, 0.0f, 5.0f) * RotationY(PI / 4.0f) * RotationX(PI / 2.0f) *
+					Scaling(10.0f, 0.01f, 10.0f), floor.mat };
+	Sphere middle{ Translation(-0.5f, 1.0f, 0.5f), Material{Color(0.1f, 1.0f, 0.5f), 0.1f, 0.7f, 0.3f} };
+	Sphere right{ Translation(1.5f, 1.0f, -0.5f) * Scaling(0.5f, 0.5f, 0.5f), Material{Color(0.5f, 1.0f, 0.1f), 0.1f, 0.7f, 0.3f} };
+	w.spheres = { floor, leftWall, rightWall, middle, right };
+	Camera cam(400, 400, PI / 3.0f, View(Point(0.0f, 1.5f, -5.0f), Point(0.0f, 1.0f, 0.0f), Vector(0.0f, 1.0f, 0.0f)));
+	Canvas c = Render(cam, w);
+	auto fileContents = CanvasToPPM(c);
+	std::ofstream ofs("wallsSpheresShadows3.ppm");
+	ofs << fileContents;
+
 	//World w;
-	Ray ray{ Point(0.0f, 0.0f, -5.0f), Vector(0.0f, 0.0f, 1.0f) };
+	// Ray ray{ Point(0.0f, 0.0f, -5.0f), Vector(0.0f, 0.0f, 1.0f) };
 	//auto intersections = IntersectWorld(w, ray);
 	//std::cout << intersections[0].second.value().t << '\n';
-	Sphere s{ Scaling(0.5f, 0.5f, 0.5f), Material{Color(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f} };
+	/*Sphere s{ Scaling(0.5f, 0.5f, 0.5f), Material{Color(0.8f, 1.0f, 0.6f), 0.1f, 0.7f, 0.2f} };
 	auto intersects = ray.Intersect(s);
-	std::cout << intersects.second.value().t << '\n';
+	std::cout << intersects.second.value().t << '\n';*/
 }

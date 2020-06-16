@@ -101,7 +101,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>C:\Users\zaidr\source\repos\RaytracerChallenge\RaytracerChallenge\Debug;$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Sphere.obj;Point.obj;Color.obj;Canvas.obj;Ray.obj;Lighting.obj;Vector.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Sphere.obj;Point.obj;Color.obj;Canvas.obj;Ray.obj;Lighting.obj;Vector.obj;Intersection.obj;World.obj;Matrix.obj;Camera.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -118,7 +118,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>C:\Users\zaidr\source\repos\RaytracerChallenge\RaytracerChallenge\Debug;$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Sphere.obj;Point.obj;Color.obj;Canvas.obj;Ray.obj;Lighting.obj;Vector.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Sphere.obj;Point.obj;Color.obj;Canvas.obj;Ray.obj;Lighting.obj;Vector.obj;Intersection.obj;World.obj;Matrix.obj;Camera.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -139,7 +139,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>C:\Users\zaidr\source\repos\RaytracerChallenge\RaytracerChallenge\Release;$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Sphere.obj;Point.obj;Color.obj;Canvas.obj;Ray.obj;Lighting.obj;Vector.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Sphere.obj;Point.obj;Color.obj;Canvas.obj;Ray.obj;Lighting.obj;Vector.obj;Intersection.obj;World.obj;Matrix.obj;Camera.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -160,7 +160,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>C:\Users\zaidr\source\repos\RaytracerChallenge\RaytracerChallenge\Release;$(VCInstallDir)UnitTest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Sphere.obj;Point.obj;Color.obj;Canvas.obj;Ray.obj;Lighting.obj;Vector.obj;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>Sphere.obj;Point.obj;Color.obj;Canvas.obj;Ray.obj;Lighting.obj;Vector.obj;Intersection.obj;World.obj;Matrix.obj;Camera.obj;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

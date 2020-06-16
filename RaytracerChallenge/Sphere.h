@@ -7,7 +7,7 @@ struct Sphere
 {
 	Mat4 transform = Mat4::Identity();
 	Material mat;
-	Vector NormalAt(Point p);
+	Vector NormalAt(Point p) const;
 	bool operator==(const Sphere& rhs) const
 	{
 		return mat == rhs.mat && transform == rhs.transform;

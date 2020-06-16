@@ -159,6 +159,8 @@ template<> inline float Matrix<2>::Determinant() const
 	return mat[0] * mat[3] - mat[1] * mat[2];
 }
 
+Mat4 View(const Point& from, const Point& to, const Vector& up);
+
 inline Mat4 Translation(float x, float y, float z)
 {
 	Mat4 mat = Mat4::Identity();

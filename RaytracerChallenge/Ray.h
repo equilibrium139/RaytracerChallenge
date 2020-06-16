@@ -14,8 +14,7 @@ struct Ray
 {
 	Point origin;
 	Vector direction;
-	Intersection hit;
-	Point Position(float t) { return origin + direction * t; }
+	Point Position(float t) const { return origin + direction * t; }
 	std::pair<std::optional<Intersection>, std::optional<Intersection>> Intersect(const Sphere& s) const;
 };
 

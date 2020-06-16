@@ -18,7 +18,7 @@ std::pair<std::optional<Intersection>, std::optional<Intersection>> Ray::Interse
 		float t1 = (-b - sqrtDiscriminant) / (2 * a);
 		float t2 = (-b + sqrtDiscriminant) / (2 * a);
 
-		return std::minmax({ std::optional<Intersection>({ s, t1 }),
-			std::optional<Intersection>({ s, t2 }) });
+		return std::minmax({ std::optional<Intersection>({ &s, t1 }),
+			std::optional<Intersection>({ &s, t2 }) });
 	}
 }
